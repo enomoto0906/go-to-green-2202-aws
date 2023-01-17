@@ -15,7 +15,7 @@ workflows:
   setup-workflow:
     jobs:
       - path-filtering/filter:
-          base-revision: origin/develop
+          base-revision: origin/main
           config-path: .circleci/continue-config.yml
           mapping: |
             .* test-build-deploy true
