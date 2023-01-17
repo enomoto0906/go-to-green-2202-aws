@@ -7,5 +7,5 @@ parameters:
 workflows:
   test-build-deploy-workflow:
     when: << pipeline.parameters.test-build-deploy >>
-           steps:
-             - run: echo "Hello world2!"
+      steps:
+        - run: echo "Hello world2!"
