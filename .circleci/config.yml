@@ -10,11 +10,11 @@ jobs:
       - image: node:current-slim
     steps:
       - run: echo "Hello world!"
-      
+ 
 workflows:
   setup-workflow:
     jobs:
-      - path-filtering/filter: ##
+      - path-filtering/filter:
           base-revision: origin/develop
           config-path: .circleci/continue-config.yml
           mapping: |
