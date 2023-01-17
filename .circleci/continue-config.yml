@@ -1,1 +1,11 @@
 
+parameters:
+  test-build-deploy:
+    type: boolean
+    default: false
+    
+workflows:
+  test-build-deploy-workflow:
+    when: << pipeline.parameters.test-build-deploy >>
+           steps:
+             - run: echo "Hello world2!"
