@@ -19,4 +19,4 @@ workflows:
           config-path: .circleci/continue-config.yml
           mapping: |
             .* test-build-deploy true
-            .circleci/config.1.yml  config1-build-deploy true
+            test/.*  testfile-build-deploy true
