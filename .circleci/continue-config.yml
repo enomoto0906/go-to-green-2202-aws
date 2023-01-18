@@ -1,11 +1,18 @@
-
 parameters:
   test-build-deploy:
     type: boolean
     default: false
+  config1-build-deploy:
+    type: boolean
+    default: false
+
     
 workflows:
   test-build-deploy-workflow:
     when: << pipeline.parameters.test-build-deploy >>
       steps:
         - run: echo "Hello world2!"
+  config1-build-deploy-workflow:
+    when: << pipeline.parameters.config1-build-deploy >>
+      steps:
+        - run: echo "Hello world3!"
