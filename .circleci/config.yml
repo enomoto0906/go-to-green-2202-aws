@@ -18,5 +18,4 @@ workflows:
           base-revision: origin/main
           config-path: .circleci/continue-config.yml
           mapping: |
-            .* test-build-deploy true
             test/.*  testfile-build-deploy true
