@@ -8,10 +8,6 @@ parameters:
 
     
 workflows:
-  test-build-deploy-workflow:
-    when: << pipeline.parameters.test-build-deploy >>
-    jobs:
-      - run: echo "Hello world2!"
   testfile-build-deploy-workflow:
     when: << pipeline.parameters.testfile-build-deploy >>
     jobs:
