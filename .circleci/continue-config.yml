@@ -1,7 +1,4 @@
 parameters:
-  test-build-deploy:
-    type: boolean
-    default: false
   testfile-build-deploy:
     type: boolean
     default: false
