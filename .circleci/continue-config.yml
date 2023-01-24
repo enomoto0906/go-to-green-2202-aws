@@ -18,5 +18,8 @@ jobs:
     docker:
       - image: node:current-slim
     steps:
-      - run: echo $TEST_ENV_VAR
+      - checkout
+      - run:
+        name: "echo test"
+        command: echo $TEST_ENV_VAR
             
