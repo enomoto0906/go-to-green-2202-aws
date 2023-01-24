@@ -8,18 +8,17 @@ workflows:
   testfile-build-deploy-workflow:
     when: << pipeline.parameters.testfile-build-deploy >>
     jobs:
-      - run: echo "Hello world3!"
-      - build:
-          context:
-            - my-context
+      - run-tests:
+        context:
+          - my-context
             
-jobs:            
-  build:
+jobs:
+  run-test:
     docker:
       - image: node:current-slim
     steps:
       - checkout
       - run:
         name: "echo test"
-        command: echo $TEST_ENV_VAR
+        command: echo TEST_ENV_VAR
             
