@@ -1,16 +1,24 @@
 version: 2.1
-setup: true
+setup: true 
 
 orbs:
   path-filtering: circleci/path-filtering@0.1.3
 
-jobs:
-  build:
-    docker:
-      - image: node:current-slim
-    steps:
-      - run: echo "Hello world!"
- 
+parameters:
+  job:
+    type: string
+    default: db:igrate
+  retry:
+    type: boolean
+    default: false
+  ticket:
+    type: string
+    default: ''
+  approve-user:
+    type: string
+    default: ''
+
+
 workflows:
   setup-workflow:
     jobs:
@@ -18,4 +26,4 @@ workflows:
           base-revision: origin/main
           config-path: .circleci/continue-config.yml
           mapping: |
-            test/.*  testfile-build-deploy true
+            .*  build-deploy-nuxt-isb-contact true
