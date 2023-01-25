@@ -92,7 +92,7 @@ jobs:
 
 workflows:
   build-deploy-nuxt-isb-contact-workflow:
-    when: << pipeline.parameters.build-deploy-nuxt-isb-contact >>
+    when: <<pipeline.parameters.build-deploy-nuxt-isb-contact>>
     jobs: 
       - build-nuxt-isb-contact-develop:
         context:
@@ -118,7 +118,7 @@ workflows:
               - circleci-project-setup
 build-deploy-nuxt-isb-contact-pass:
   when:
-    not: << pipeline.parameters.build-deploy-nuxt-isb-contact >>
+    not: <<pipeline.parameters.build-deploy-nuxt-isb-contact>>
   jobs:
     -pass
 
