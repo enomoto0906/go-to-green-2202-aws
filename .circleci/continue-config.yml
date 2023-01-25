@@ -95,27 +95,27 @@ workflows:
     when: <<pipeline.parameters.build-deploy-nuxt-isb-contact>>
     jobs: 
       - build-nuxt-isb-contact-develop:
-        context:
-          - google-cloud-develop
-        filters:
-          branches:
-            only:
-              - develop
-              - circleci-project-setup
+          context:
+            - google-cloud-develop
+          filters:
+            branches:
+              only:
+                - develop
+                - circleci-project-setup
       - rollout-approve:
-        type: approval
-        requires: 
-          - build-nuxt-isb-contact-develop
+          type: approval
+          requires: 
+            - build-nuxt-isb-contact-develop
       - rollout-develop:
-        contest:
-          - google-cloud-develop
-        requires:
-          - rollout-approve
-        filters:
-          branches:
-            only:
-              - develop
-              - circleci-project-setup
+          contest:
+            - google-cloud-develop
+          requires:
+            - rollout-approve
+          filters:
+            branches:
+              only:
+                - develop
+                - circleci-project-setup
 build-deploy-nuxt-isb-contact-pass:
   when:
     not: <<pipeline.parameters.build-deploy-nuxt-isb-contact>>
