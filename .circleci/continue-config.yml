@@ -73,7 +73,7 @@ commands:
       - run:
           name: Build Finish
           command: echo Build Finish
-  # image-roolout:
+  #image-roolout:
 
 jobs:
   build-nuxt-isb-contact-develop:
@@ -88,7 +88,8 @@ jobs:
           google-project-id: "WC_PRJ004_DEV_PROJECT_ID"
           image: "nuxt-isb-contact"
           path: "./"
-          docker-context: "./" 
+          docker-context: "./"
+
 workflows:
   build-deploy-nuxt-isb-contact-workflow:
     when: << pipeline.parameters.build-deploy-nuxt-isb-contact >>
@@ -111,7 +112,7 @@ workflows:
         requires:
           - rollout-approve
         filters:
-          branchs:
+          branches:
             only:
               - develop
               - circleci-project-setup
