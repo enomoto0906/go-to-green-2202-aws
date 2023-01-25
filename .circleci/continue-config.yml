@@ -1,24 +1,123 @@
+version: 2.1
+
+orbs:
+  gcp-cli: circleci/gcp-cli@3.0.1
+  gcp-gcr: circleci/gcp-gcr@0.15.0
+  gcp-gke: circleci/gcp-gke@1.4.0
+
 parameters:
-  testfile-build-deploy:
+  build-deploy-nuxt-isb-contact:
     type: boolean
     default: false
+  job:
+    type: string
+    default: db:migrate
+  retry:
+    type: boolean
+    default: false
+  ticket:
+    type: string
+    default: ''
+  desc:
+    type: string
+    default: ''
+  approve-user:
+    type: string
+    default: ''
 
-    
-workflows:
-  testfile-build-deploy-workflow:
-    when: << pipeline.parameters.testfile-build-deploy >>
-    jobs:
-      - run-tests:
-        context:
-          - my-context
-            
+commands:
+  docker-build:
+    parameters:
+      gcloud-service-key:
+        default: ""
+        type: string
+      google-project-id:
+        default: ""
+        type: string
+      image:
+        default: ""
+        type: string
+      path:
+        default: ""
+        type: string
+      docker-context:
+        default: ""
+        type: string
+      extra_build_args:
+        default: ""
+        type: string
+  steps:
+    - gcp-gcr/gcr-auth:
+        gcloud-service-key: <<parameters.gcloud-service-key>>
+        google-project-id: <<parameters.google-project-id>>
+        registry-url: asia.gcr.io
+    - gcp-gcr/build-image:
+        image: <<parameters.image>>
+        tag: ${CIRCLE_SHA1}
+        extra_build_args: <<parameters.extra_build_args>>
+        path: <<parameters.path>>
+        docker-context: <<parameters.docker-context>>
+        registry-url: asia.gcr.io
+        google-project-id: <<parameters.google-project-id>>
+    - gcp-gcr/push-image:
+        image: <<parameters.image>>
+        tag: '${CIRCLE_SHA1}'
+        registry-url: asia.gcr.io
+        google-project-id: <<parameters.google-project-id>>
+    - gcp-gcr/tag-image:
+        image: <<parameters.image>>
+        source-tag: '${CIRCLE_SHA1}'
+        target-tag: latest
+        registry-url: asia.gcr.io
+        google-project-id: <<parameters.google-project-id>>
+    - run:
+        name: Build Finish
+        command: echo Build Finish
+  # image-roolout:
+
 jobs:
-  run-test:
-    docker:
-      - image: node:current-slim
+  build-nuxt-isb-contact-develop:
+    # cimg/base:2022.11-20.04 でも行けるのかな？
+    machine:
+      image: ubuntu-2204:2022.04.1
+      docker_layer_caching: true
     steps:
       - checkout
-      - run:
-        name: "echo test"
-        command: echo TEST_ENV_VAR
+      - docker-build:
+          gcloud-service-key: "GCLOUD_SERVICE_KEY"
+          google-project-id: "WC_PRJ004_DEV_PROJECT_ID"
+          image: "nuxt-isb-contact"
+          path: "./"
+          docker-context: "./" 
+workflows:
+  build-deploy-nuxt-isb-contact-workflow:
+    when: << pipeline.parameters.build-deploy-nuxt-isb-contact >>
+    jobs: 
+      - build-nuxt-isb-contact-develop:
+        context:
+          - google-cloud-develop
+        filters:
+          branches:
+            only:
+              - develop
+              - circleci-project-setup
+      - rollout-approve:
+        type: approval
+        requires: 
+          - build-nuxt-isb-contact-develop
+      - rollout-develop:
+        contest:
+          - google-cloud-develop
+        requires:
+          - rollout-approve
+        filters:
+          branchs:
+            only:
+              - develop
+              - circleci-project-setup
+build-deploy-nuxt-isb-contact-pass:
+  when:
+    not: << pipeline.parameters.build-deploy-nuxt-isb-contact >>
+  jobs:
+    -pass
             
