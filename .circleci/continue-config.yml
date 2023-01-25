@@ -46,33 +46,33 @@ commands:
       extra_build_args:
         default: ""
         type: string
-  steps:
-    - gcp-gcr/gcr-auth:
-        gcloud-service-key: <<parameters.gcloud-service-key>>
-        google-project-id: <<parameters.google-project-id>>
-        registry-url: asia.gcr.io
-    - gcp-gcr/build-image:
-        image: <<parameters.image>>
-        tag: ${CIRCLE_SHA1}
-        extra_build_args: <<parameters.extra_build_args>>
-        path: <<parameters.path>>
-        docker-context: <<parameters.docker-context>>
-        registry-url: asia.gcr.io
-        google-project-id: <<parameters.google-project-id>>
-    - gcp-gcr/push-image:
-        image: <<parameters.image>>
-        tag: '${CIRCLE_SHA1}'
-        registry-url: asia.gcr.io
-        google-project-id: <<parameters.google-project-id>>
-    - gcp-gcr/tag-image:
-        image: <<parameters.image>>
-        source-tag: '${CIRCLE_SHA1}'
-        target-tag: latest
-        registry-url: asia.gcr.io
-        google-project-id: <<parameters.google-project-id>>
-    - run:
-        name: Build Finish
-        command: echo Build Finish
+    steps:
+      - gcp-gcr/gcr-auth:
+          gcloud-service-key: <<parameters.gcloud-service-key>>
+          google-project-id: <<parameters.google-project-id>>
+          registry-url: asia.gcr.io
+      - gcp-gcr/build-image:
+          image: <<parameters.image>>
+          tag: ${CIRCLE_SHA1}
+          extra_build_args: <<parameters.extra_build_args>>
+          path: <<parameters.path>>
+          docker-context: <<parameters.docker-context>>
+          registry-url: asia.gcr.io
+          google-project-id: <<parameters.google-project-id>>
+      - gcp-gcr/push-image:
+          image: <<parameters.image>>
+          tag: '${CIRCLE_SHA1}'
+          registry-url: asia.gcr.io
+          google-project-id: <<parameters.google-project-id>>
+      - gcp-gcr/tag-image:
+          image: <<parameters.image>>
+          source-tag: '${CIRCLE_SHA1}'
+          target-tag: latest
+          registry-url: asia.gcr.io
+          google-project-id: <<parameters.google-project-id>>
+      - run:
+          name: Build Finish
+          command: echo Build Finish
   # image-roolout:
 
 jobs:
@@ -120,4 +120,15 @@ build-deploy-nuxt-isb-contact-pass:
     not: << pipeline.parameters.build-deploy-nuxt-isb-contact >>
   jobs:
     -pass
-            
+
+
+
+
+
+
+
+
+
+
+
+
