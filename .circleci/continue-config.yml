@@ -73,7 +73,40 @@ commands:
       - run:
           name: Build Finish
           command: echo Build Finish
-  #image-roolout:
+  image-roolout:
+    parameters:
+      gcloud-service-key:
+        default: ""
+        type: string
+      google-project-id:
+        default: ""
+        type: string
+      cluster-name:
+        default: ""
+        type: string
+      container:
+        default: ""
+        type: string
+      deployment:
+        default: ""
+        type: string
+      image:
+        default: ""
+        type: string
+    steps:
+      - gcp-cli/setup:
+          gcloud_service_key: <<parameters.gcloud-service-key>>
+          google_project_id: <<parameters.google-project-id>>
+      #- gcp-cli/install:
+      - gcp-gke/rollout-image:
+          cluster: <<parameters.cluster-name>> --region ${GOOGLE_COMPUTE_REGION} --project ${<<parameters.google-project-id>>}
+          container: <<parameters.container>>
+          deployment: <<parameters.deployment>>
+          image: asia.gcr.io/${<<parameters.google-project-id>>}/<<parameters.image>>
+          tag: ${CIRCLE_SHA1}
+      - run:
+          name: Rollout image
+          command: echo Rollout Finish
 
 jobs:
   build-nuxt-isb-contact-develop:
@@ -89,6 +122,19 @@ jobs:
           image: "nuxt-isb-contact"
           path: "./"
           docker-context: "./"
+  rollout-develop:
+    docker:
+      - image: cimg/python:3.8.15
+    circleci_ip_ranges: true
+    steps:
+      - checkout
+      - image-roolout:
+          gcloud-service-key: "GCLOUD_SERVICE_KEY"
+          google-project-id: "WC_PRJ004_DEV_PROJECT_ID"
+          cluster-name: "prj004-gke00"
+          container: "nuxt-isb-contact"
+          deployment: "nuxt-isb-contact"
+          image: "nuxt-isb-contact"
 
 workflows:
   build-deploy-nuxt-isb-contact-workflow:
@@ -107,7 +153,7 @@ workflows:
           requires: 
             - build-nuxt-isb-contact-develop
       - rollout-develop:
-          contest:
+          context:
             - google-cloud-develop
           requires:
             - rollout-approve
@@ -121,15 +167,3 @@ build-deploy-nuxt-isb-contact-pass:
     not: <<pipeline.parameters.build-deploy-nuxt-isb-contact>>
   jobs:
     -pass
-
-
-
-
-
-
-
-
-
-
-
-
